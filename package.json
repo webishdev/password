@@ -6,10 +6,11 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && shx cp -R dist/* docs/",
     "serve": "vite preview",
     "test": "vitest",
-    "postinstall": "node ./fix-jest-dom.mjs"
+    "postinstall": "node ./fix-jest-dom.mjs",
+    "copy": "shx cp -R dist/* docs/"
   },
   "license": "MIT",
   "devDependencies": {
@@ -22,6 +23,7 @@
     "vitest": "0.12.6"
   },
   "dependencies": {
-    "solid-js": "1.4.2"
+    "solid-js": "1.4.2",
+    "shx": "0.3.4"
   }
 }
