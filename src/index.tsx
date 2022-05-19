@@ -1,5 +1,5 @@
 import { render } from 'solid-js/web';
+import { PasswordGen } from './password-gen';
 
-import { TodoList } from './todo-list';
 
-render(() => <TodoList />, document.getElementById('root'));
+render(() => <PasswordGen />, document.getElementById('root'));
