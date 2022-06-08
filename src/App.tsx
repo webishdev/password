@@ -92,19 +92,19 @@ function App() {
       </Typography>
       <Divider />
       <Stack>
-        <Stack direction="row" alignItems="center">
+        <Stack direction="row" alignItems="center" onClick={() => setLowercase(!lowercase)}>
           <Switch checked={lowercase} onChange={() => setLowercase(!lowercase)} />
           Lowercase
         </Stack>
-        <Stack direction="row" alignItems="center">
+        <Stack direction="row" alignItems="center" onClick={() => setUppercase(!uppercase)}>
           <Switch checked={uppercase} onChange={() => setUppercase(!uppercase)} />
           Uppercase
         </Stack>
-        <Stack direction="row" alignItems="center">
+        <Stack direction="row" alignItems="center" onClick={() => setDigits(!digits)}>
           <Switch checked={digits} onChange={() => setDigits(!digits)} />
           Digits
         </Stack>
-        <Stack direction="row" alignItems="center">
+        <Stack direction="row" alignItems="center" onClick={() => setSpecial(!special)}>
           <Switch checked={special} onChange={() => setSpecial(!special)} />
           Special
         </Stack>
