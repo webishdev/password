@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { Mark } from "@mui/base";
-import { Box, Button, Divider, Slider, Stack, Switch, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, InputAdornment, Slider, Stack, Switch, TextField, Typography } from "@mui/material";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RunCircleIcon from '@mui/icons-material/RunCircle';
+import KeyIcon from '@mui/icons-material/Key';
 import genPassword from './genPassword';
 
 function App() {
@@ -112,8 +113,9 @@ function App() {
             <Stack alignItems="center" textAlign="center">Length {length}</Stack>
         </Stack>
         <Stack mt={2} direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-          <Stack flexGrow={1}><TextField value={password} InputProps={{
+          <Stack flexGrow={1}><TextField value={password} multiline InputProps={{
             readOnly: true,
+            startAdornment: <InputAdornment position="start"><KeyIcon /></InputAdornment>
           }} /></Stack>
           <Button variant="contained" onClick={handleCopyClick} disabled={!copyAvailable || copied} endIcon={<ContentCopyIcon />}>{copied ? 'Copied!' : 'Copy'}</Button>
         </Stack>
