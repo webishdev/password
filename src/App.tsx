@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -21,12 +21,16 @@ interface Mark {
   label: string;
 }
 
+const gcd = (a: number, b: number): number => {
+  if (b === 0) return a;
+  return gcd(b, a % b);
+};
+
 function App() {
   const defaultLength = 16;
   const minLength = 4;
   const maxLength = 64;
 
-  const [toggle, setToggle] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
 
   const [length, setLength] = useState<number>(defaultLength);
@@ -36,9 +40,23 @@ function App() {
   const [special, setSpecial] = useState<boolean>(false);
   const [excludeAmbiguous, setExcludeAmbiguous] = useState<boolean>(true);
 
-  const password = useMemo<string>(() => {
-    return genPassword(length, lowercase, uppercase, digits, special, excludeAmbiguous);
-  }, [toggle, length, lowercase, uppercase, digits, special, excludeAmbiguous]);
+  const enabledCharSetsCount =
+    Number(lowercase) + Number(uppercase) + Number(digits) + Number(special);
+
+  const isLastEnabledCharSet = enabledCharSetsCount === 1;
+
+  const [password, setPassword] = useState<string>(() =>
+    genPassword(defaultLength, true, true, true, false, true)
+  );
+
+  const regeneratePassword = useCallback(() => {
+    setPassword(genPassword(length, lowercase, uppercase, digits, special, excludeAmbiguous));
+  }, [length, lowercase, uppercase, digits, special, excludeAmbiguous]);
+
+  // Regenerate whenever inputs change
+  useEffect(() => {
+    regeneratePassword();
+  }, [regeneratePassword]);
 
   const handleSliderChange = (_event: Event, newValue: number | number[]) => {
     if (Array.isArray(newValue)) {
@@ -74,11 +92,6 @@ function App() {
       });
   };
 
-  const gcd = (a: number, b: number): number => {
-    if (b === 0) return a;
-    return gcd(b, a % b);
-  };
-
   const marks = useMemo<Mark[]>(() => {
     const result: Mark[] = [];
 
@@ -106,19 +119,43 @@ function App() {
       <Divider />
       <Stack>
         <FormControlLabel
-          control={<Switch checked={lowercase} onChange={() => setLowercase(!lowercase)} />}
+          control={
+            <Switch
+              checked={lowercase}
+              onChange={() => setLowercase(!lowercase)}
+              disabled={isLastEnabledCharSet && lowercase}
+            />
+          }
           label="Lowercase"
         />
         <FormControlLabel
-          control={<Switch checked={uppercase} onChange={() => setUppercase(!uppercase)} />}
+          control={
+            <Switch
+              checked={uppercase}
+              onChange={() => setUppercase(!uppercase)}
+              disabled={isLastEnabledCharSet && uppercase}
+            />
+          }
           label="Uppercase"
         />
         <FormControlLabel
-          control={<Switch checked={digits} onChange={() => setDigits(!digits)} />}
+          control={
+            <Switch
+              checked={digits}
+              onChange={() => setDigits(!digits)}
+              disabled={isLastEnabledCharSet && digits}
+            />
+          }
           label="Digits"
         />
         <FormControlLabel
-          control={<Switch checked={special} onChange={() => setSpecial(!special)} />}
+          control={
+            <Switch
+              checked={special}
+              onChange={() => setSpecial(!special)}
+              disabled={isLastEnabledCharSet && special}
+            />
+          }
           label="Special"
         />
         <FormControlLabel
@@ -175,7 +212,7 @@ function App() {
           <Button
             variant="contained"
             size="large"
-            onClick={() => setToggle(!toggle)}
+            onClick={regeneratePassword}
             endIcon={<RunCircleIcon />}
           >
             Generate
