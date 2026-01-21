@@ -40,6 +40,11 @@ function App() {
   const [special, setSpecial] = useState<boolean>(false);
   const [excludeAmbiguous, setExcludeAmbiguous] = useState<boolean>(true);
 
+  const enabledCharSetsCount =
+    Number(lowercase) + Number(uppercase) + Number(digits) + Number(special);
+
+  const isLastEnabledCharSet = enabledCharSetsCount === 1;
+
   const [password, setPassword] = useState<string>(() =>
     genPassword(defaultLength, true, true, true, false, true)
   );
@@ -114,19 +119,43 @@ function App() {
       <Divider />
       <Stack>
         <FormControlLabel
-          control={<Switch checked={lowercase} onChange={() => setLowercase(!lowercase)} />}
+          control={
+            <Switch
+              checked={lowercase}
+              onChange={() => setLowercase(!lowercase)}
+              disabled={isLastEnabledCharSet && lowercase}
+            />
+          }
           label="Lowercase"
         />
         <FormControlLabel
-          control={<Switch checked={uppercase} onChange={() => setUppercase(!uppercase)} />}
+          control={
+            <Switch
+              checked={uppercase}
+              onChange={() => setUppercase(!uppercase)}
+              disabled={isLastEnabledCharSet && uppercase}
+            />
+          }
           label="Uppercase"
         />
         <FormControlLabel
-          control={<Switch checked={digits} onChange={() => setDigits(!digits)} />}
+          control={
+            <Switch
+              checked={digits}
+              onChange={() => setDigits(!digits)}
+              disabled={isLastEnabledCharSet && digits}
+            />
+          }
           label="Digits"
         />
         <FormControlLabel
-          control={<Switch checked={special} onChange={() => setSpecial(!special)} />}
+          control={
+            <Switch
+              checked={special}
+              onChange={() => setSpecial(!special)}
+              disabled={isLastEnabledCharSet && special}
+            />
+          }
           label="Special"
         />
         <FormControlLabel
