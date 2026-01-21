@@ -21,6 +21,11 @@ interface Mark {
   label: string;
 }
 
+const gcd = (a: number, b: number): number => {
+  if (b === 0) return a;
+  return gcd(b, a % b);
+};
+
 function App() {
   const defaultLength = 16;
   const minLength = 4;
@@ -38,7 +43,7 @@ function App() {
 
   const password = useMemo<string>(() => {
     return genPassword(length, lowercase, uppercase, digits, special, excludeAmbiguous);
-  }, [toggle, length, lowercase, uppercase, digits, special, excludeAmbiguous]);
+  }, [length, lowercase, uppercase, digits, special, excludeAmbiguous]);
 
   const handleSliderChange = (_event: Event, newValue: number | number[]) => {
     if (Array.isArray(newValue)) {
@@ -72,11 +77,6 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  };
-
-  const gcd = (a: number, b: number): number => {
-    if (b === 0) return a;
-    return gcd(b, a % b);
   };
 
   const marks = useMemo<Mark[]>(() => {
