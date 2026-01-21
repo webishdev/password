@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -31,7 +31,6 @@ function App() {
   const minLength = 4;
   const maxLength = 64;
 
-  const [toggle, setToggle] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
 
   const [length, setLength] = useState<number>(defaultLength);
@@ -41,9 +40,18 @@ function App() {
   const [special, setSpecial] = useState<boolean>(false);
   const [excludeAmbiguous, setExcludeAmbiguous] = useState<boolean>(true);
 
-  const password = useMemo<string>(() => {
-    return genPassword(length, lowercase, uppercase, digits, special, excludeAmbiguous);
+  const [password, setPassword] = useState<string>(() =>
+    genPassword(defaultLength, true, true, true, false, true)
+  );
+
+  const regeneratePassword = useCallback(() => {
+    setPassword(genPassword(length, lowercase, uppercase, digits, special, excludeAmbiguous));
   }, [length, lowercase, uppercase, digits, special, excludeAmbiguous]);
+
+  // Regenerate whenever inputs change
+  useEffect(() => {
+    regeneratePassword();
+  }, [regeneratePassword]);
 
   const handleSliderChange = (_event: Event, newValue: number | number[]) => {
     if (Array.isArray(newValue)) {
@@ -175,7 +183,7 @@ function App() {
           <Button
             variant="contained"
             size="large"
-            onClick={() => setToggle(!toggle)}
+            onClick={regeneratePassword}
             endIcon={<RunCircleIcon />}
           >
             Generate
